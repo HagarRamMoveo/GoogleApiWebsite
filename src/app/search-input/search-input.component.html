@@ -1,0 +1,13 @@
+<div class="search-bar">
+  <div class="input-container">
+    <input
+      type="text"
+      class="search-input"
+      #searchInput
+      (input)="filterData(searchInput.value)"
+    />
+    <button class="search-btn" [disabled]="searchInput.value === ''">
+      SEARCH
+    </button>
+  </div>
+</div>
