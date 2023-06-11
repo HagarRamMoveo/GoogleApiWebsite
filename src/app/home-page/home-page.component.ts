@@ -1,13 +1,10 @@
 /// <reference types="@types/googlemaps" />
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { MapsService } from '../service/maps.service';
 
 declare const google: any;
-
+const moveolat:number = 32.06228322103126;
+const moveoLng:number = 34.77080847356973;
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
@@ -16,13 +13,18 @@ declare const google: any;
 export class HomePageComponent implements AfterViewInit {
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
-  public map!: google.maps.Map;
-  public searchMarker!: google.maps.Marker;
-  public defaultMarker!: google.maps.Marker;
-  public autocomplete!: google.maps.places.Autocomplete;
+  map!: google.maps.Map;
+  searchMarker!: google.maps.Marker;
+  defaultMarker!: google.maps.Marker;
+  autocomplete!: google.maps.places.Autocomplete;
+  directionsService!: google.maps.DirectionsService;
+  directionsDisplay!: google.maps.DirectionsRenderer;
 
+  constructor(private mapsService: MapsService) {}
 
   ngAfterViewInit() {
+    // this.mapsService.mapContainer = this.mapContainer;
+    // this.mapsService.loadGoogleMapsAPI();
     this.loadGoogleMapsAPI();
   }
 
@@ -39,7 +41,8 @@ export class HomePageComponent implements AfterViewInit {
       document.getElementById('address-input') as HTMLInputElement
     );
     this.autocomplete.addListener('place_changed', () => {
-      const place: google.maps.places.PlaceResult = this.autocomplete.getPlace();
+      const place: google.maps.places.PlaceResult =
+        this.autocomplete.getPlace();
       if (!place.geometry || !place.geometry.location) {
         return;
       }
@@ -55,27 +58,51 @@ export class HomePageComponent implements AfterViewInit {
       });
 
       this.map.setCenter(place.geometry.location);
-      this.map.setZoom(15); // Adjust the desired zoom level as needed
+      this.map.setZoom(15);
     });
   }
-  
+
+  getDirection() {
+    if (!this.searchMarker || !this.searchMarker.getPosition()) {
+      return;
+    }
+
+    const request: google.maps.DirectionsRequest = {
+      origin: { lat: moveolat, lng: moveoLng },
+      destination: this.searchMarker.getPosition()!,
+      travelMode: google.maps.DirectionsTravelMode.DRIVING,
+    };
+
+    this.directionsService.route(
+      request,
+      (
+        response: google.maps.DirectionsResult,
+        status: google.maps.DirectionsStatus
+      ) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          this.directionsDisplay.setDirections(response);
+        } else {
+          alert('Google route unsuccessful!');
+        }
+      }
+    );
+  }
   initializeMap() {
     const mapOptions: google.maps.MapOptions = {
-      center: { lat: 32.06228322103126, lng: 34.77080847356973 },
+      center: { lat: moveolat, lng: moveoLng },
       zoom: 8,
     };
 
     this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
 
     this.defaultMarker = new google.maps.Marker({
-      position: { lat: 32.06228322103126, lng: 34.77080847356973 },
+      position: { lat: moveolat, lng: moveoLng },
       map: this.map,
       title: 'Office Location',
     });
-   
-      }}
-    
-  
-
- 
-
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsDisplay = new google.maps.DirectionsRenderer({
+      map: this.map,
+    });
+  }
+}
