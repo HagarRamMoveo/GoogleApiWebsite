@@ -1,8 +1,6 @@
 /// <reference types="@types/googlemaps" />
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { MapsService } from '../service/maps.service';
+import { Component} from '@angular/core';
 
-declare const google: any;
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
