@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MapsService } from '../service/maps.service';
 
 @Component({
   selector: 'app-direction-button',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./direction-button.component.scss']
 })
 export class DirectionButtonComponent {
+  constructor(private mapsService: MapsService) {}
 
+  getDirection(){
+    this.mapsService.getDirection();
+  }
 }

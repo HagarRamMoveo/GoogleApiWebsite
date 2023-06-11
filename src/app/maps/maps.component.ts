@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+/// <reference types="@types/googlemaps" />
+
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MapsService } from '../service/maps.service';
 
 @Component({
@@ -6,8 +8,14 @@ import { MapsService } from '../service/maps.service';
   templateUrl: './maps.component.html',
   styleUrls: ['./maps.component.scss']
 })
-export class MapsComponent {
-constructor(private _mapService: MapsService){}
-  
+export class MapsComponent implements AfterViewInit {
+  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
 
+  constructor(private mapsService: MapsService) {}
+
+  ngAfterViewInit() {
+    this.mapsService.mapContainer = this.mapContainer;
+    this.mapsService.loadGoogleMapsAPI();
+
+  }
 }

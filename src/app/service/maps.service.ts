@@ -18,10 +18,6 @@ export class MapsService {
   directionsDisplay!: google.maps.DirectionsRenderer;
 
 
-  ngAfterViewInit() {
-    this.loadGoogleMapsAPI();
-  }
-
   loadGoogleMapsAPI() {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDdzBpJxo34zgg7MLWAV5WHBC0SnmqxsBM&libraries=places`;

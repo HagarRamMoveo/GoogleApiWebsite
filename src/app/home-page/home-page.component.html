@@ -1,11 +1,6 @@
-<div id="mapContainer" #mapContainer></div>
+<app-maps></app-maps>
 <!-- // map component -->
 <div class="search-container">
-  <input
-    type="text"
-    id="address-input"
-    placeholder="Enter an address"
-    (input)="autocompleteDrop()"
-  />
-  <button id="direction-button" (click)="getDirection()">Set Direction</button>
+  <app-address-input></app-address-input>
+  <app-direction-button></app-direction-button>
 </div>
