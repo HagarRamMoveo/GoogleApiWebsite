@@ -1,0 +1,26 @@
+<div>
+    <app-logo></app-logo>
+    <div class="search-bar">
+      <select (change)="selectPokemonType($event)">
+        <option *ngFor="let type of uniqueArray">
+          {{ type }}
+        </option>
+      </select>
+    </div>
+    <div class="search-bar">
+      <app-search-input  (searchData)="searchPokemon($event)"></app-search-input>
+      <app-select-bar 
+      [selectName]="filteredPokemonData"></app-select-bar>
+    </div> 
+    <div class="pokemons-container">
+      <app-pokemoncard
+        *ngFor="let pokemon of filteredPokemonData"
+        [pokemonName]="pokemon.name"
+        [pokemon]="pokemon"
+        [pokemonImage]="pokemon.url"
+        [pokemonAbilites]="pokemon.abilities"
+      ></app-pokemoncard>
+    </div>
+  </div>
+  
+  
